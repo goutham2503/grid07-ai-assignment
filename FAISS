@@ -1,0 +1,32 @@
+from langchain.embeddings import HuggingFaceEmbeddings
+from langchain.vectorstores import FAISS
+
+# Initialize embeddings
+embedding_model = HuggingFaceEmbeddings()
+
+# Bot personas
+bot_personas = {
+    "bot_A": "AI and crypto will solve everything. Love Elon Musk and space.",
+    "bot_B": "Tech monopolies are dangerous. I value privacy and nature.",
+    "bot_C": "Markets, trading, ROI, finance only."
+}
+
+# Create vector store
+texts = list(bot_personas.values())
+metadatas = [{"bot_id": k} for k in bot_personas.keys()]
+
+vectorstore = FAISS.from_texts(texts, embedding_model, metadatas=metadatas)
+
+def route_post_to_bots(post_content, threshold=0.5):
+    results = vectorstore.similarity_search_with_score(post_content)
+
+    matched = []
+    for doc, score in results:
+        if score < 1.0:  # lower score = more similar in FAISS
+            matched.append((doc.metadata["bot_id"], score))
+
+    return matched
+
+
+if __name__ == "__main__":
+    print(route_post_to_bots("OpenAI released a new AI model"))
