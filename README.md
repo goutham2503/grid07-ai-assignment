@@ -1,27 +1,19 @@
+## Architecture Overview
 
-# Grid07 AI Assignment
+This project implements a cognitive AI pipeline with three phases:
 
-## Overview
-This project implements:
-- Vector-based persona routing
-- Autonomous content generation
-- RAG-based argument defense
+### Phase 1: Routing (FAISS Vector DB)
+- Uses FAISS to store persona embeddings
+- Converts distance scores into similarity scores
+- Routes posts based on threshold filtering
 
-## Phase 1
-Used SentenceTransformers + cosine similarity.
+### Phase 2: Content Generation (LangGraph-style Flow)
+- Node 1: Topic decision
+- Node 2: Tool-based search
+- Node 3: Post drafting
+- Output is strict JSON format
 
-## Phase 2
-Simulated LangGraph workflow:
-1. Topic decision
-2. Tool-based search
-3. Post generation
-
-## Phase 3
-Implemented prompt injection defense:
-- Strong system prompt
-- Persona enforcement
-- Ignoring malicious instructions
-
-## How to Run
-pip install -r requirements.txt
-python main.py
+### Phase 3: RAG Defense Engine
+- Uses full conversation context
+- Applies system rules to prevent prompt injection
+- Maintains persona consistency
